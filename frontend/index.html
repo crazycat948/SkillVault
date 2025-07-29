@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SkillVault</title>
+</head>
+<body>
+    <h1>Skill List</h1>
+    <ul id="skill-list"></ul>
+
+    <h2>Add Skill</h2>
+    <form id="skill-form">
+        <input type="text" id="name" placeholder="Skill Name" required />
+        <input type="text" id="description" placeholder="Description" required />
+        <input type="number" id="proficiency" placeholder="Proficiency (1-5)" required />
+        <button type="submit">Add</button>
+    </form>
+
+    <script>
+        const apiUrl = 'http://localhost:8080/skills';
+
+        function fetchSkills() {
+            fetch(apiUrl)
+                .then(res => res.json())
+                .then(data => {
+                    const list = document.getElementById('skill-list');
+                    list.innerHTML = '';
+                    data.forEach(skill => {
+                        const li = document.createElement('li');
+                        li.textContent = `${skill.name} - ${skill.description} (Level: ${skill.proficiency})`;
+                        list.appendChild(li);
+                    });
+                });
+        }
+
+        document.getElementById('skill-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const description = document.getElementById('description').value;
+            const proficiency = document.getElementById('proficiency').value;
+
+            fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, description, proficiency })
+            }).then(() => {
+                fetchSkills();
+                this.reset();
+            });
+        });
+
+        fetchSkills();
+    </script>
+</body>
+</html>

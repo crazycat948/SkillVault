@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*") // 临时允许所有来源，解决跨域
 @RestController
 @RequestMapping("/skills")
 public class SkillController {
